@@ -5,22 +5,18 @@ namespace SlowMember
 {
     internal static class StaticReflectionHelper
     {
+        private static readonly ReflectionService ReflectionService;
+
         static StaticReflectionHelper()
         {
             ReflectionService = new ReflectionService();
         }
-
-        private static readonly ReflectionService ReflectionService;
 
         public static bool CacheDisabled
         {
             get { return ReflectionService.CacheDisabled; }
             set { ReflectionService.CacheDisabled = value; }
         }
-
-        #region Cache
-
-        #endregion
 
         /// <summary>
         ///     Get Fields and Properties from type.
@@ -69,9 +65,11 @@ namespace SlowMember
         /// <summary>
         ///     Get Fields and Properties from type and fill ObjectDescription. This method use caching mechanism.
         /// </summary>
-        /// <param name="type">Type to get <see cref="ObjectDescription"/></param>
+        /// <param name="type">Type to get <see cref="ObjectDescription" /></param>
         /// <param name="includeNonPublicMembers">Wheter or not include non public fields/properties</param>
-        /// <returns><see cref="ObjectDescription"/></returns>
+        /// <returns>
+        ///     <see cref="ObjectDescription" />
+        /// </returns>
         public static ObjectDescription GetObjectDescription(this Type type, bool includeNonPublicMembers = false)
         {
             return ReflectionService.GetObjectDescription(type, includeNonPublicMembers);
@@ -80,12 +78,19 @@ namespace SlowMember
         /// <summary>
         ///     Get Fields and Properties from type and fill ObjectDescription. This method use caching mechanism.
         /// </summary>
-        /// <param name="instance">Instance to get <see cref="ObjectDescription"/></param>
+        /// <param name="instance">Instance to get <see cref="ObjectDescription" /></param>
         /// <param name="includeNonPublicMembers">Wheter or not include non public fields/properties</param>
-        /// <returns><see cref="ObjectDescription"/></returns>
-        public static ObjectDescription GetObjectDescription<T>(this T instance, bool includeNonPublicMembers = false) where T: class
+        /// <returns>
+        ///     <see cref="ObjectDescription" />
+        /// </returns>
+        public static ObjectDescription GetObjectDescription<T>(this T instance, bool includeNonPublicMembers = false)
+            where T : class
         {
             return ReflectionService.GetObjectDescription(instance, includeNonPublicMembers);
         }
+
+        #region Cache
+
+        #endregion
     }
 }

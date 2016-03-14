@@ -12,8 +12,9 @@ namespace SlowMember
             AttributeDescriptions = new List<AttributeDescription>(10);
             MethodDescriptions = new List<MethodDescription>(100);
         }
-        
-        public ObjectDescription(IReflectionService reflectionService, Type type, bool includeNonPublicMembers = false, string name = "") : this()
+
+        public ObjectDescription(IReflectionService reflectionService, Type type, bool includeNonPublicMembers = false,
+            string name = "") : this()
         {
             if (type == null) throw new ArgumentNullException("type");
             Name = string.IsNullOrWhiteSpace(name) ? type.Name : name;
@@ -21,7 +22,8 @@ namespace SlowMember
             var attributes = type.GetCustomAttributes(true).ToList();
             if (attributes.Any())
             {
-                foreach (var description in attributes.Select(attribute => new AttributeDescription((Attribute)attribute)))
+                foreach (
+                    var description in attributes.Select(attribute => new AttributeDescription((Attribute) attribute)))
                 {
                     AttributeDescriptions.Add(description);
                 }
@@ -29,15 +31,21 @@ namespace SlowMember
             var fieldInfos = reflectionService.GetFields(type, includeNonPublicMembers);
             var popertyInfos = reflectionService.GetProperties(type, includeNonPublicMembers);
             var methodInfos = reflectionService.GetMethods(type, includeNonPublicMembers);
-            foreach (var memberDescription in fieldInfos.Select(fieldInfo => new MemberDescription(reflectionService, fieldInfo, this)))
+            foreach (
+                var memberDescription in
+                    fieldInfos.Select(fieldInfo => new MemberDescription(reflectionService, fieldInfo, this)))
             {
                 MemberDescriptions.Add(memberDescription);
             }
-            foreach (var memberDescription in popertyInfos.Select(propertyInfo => new MemberDescription(reflectionService, propertyInfo, this)))
+            foreach (
+                var memberDescription in
+                    popertyInfos.Select(propertyInfo => new MemberDescription(reflectionService, propertyInfo, this)))
             {
                 MemberDescriptions.Add(memberDescription);
             }
-            foreach (var methodDescription in methodInfos.Select(methodInfo => new MethodDescription(reflectionService, methodInfo, this)))
+            foreach (
+                var methodDescription in
+                    methodInfos.Select(methodInfo => new MethodDescription(reflectionService, methodInfo, this)))
             {
                 MethodDescriptions.Add(methodDescription);
             }

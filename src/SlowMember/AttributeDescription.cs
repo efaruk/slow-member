@@ -10,7 +10,7 @@ namespace SlowMember
             Name = attribute.GetType().Name;
         }
 
-        public Attribute Attribute { get; private set;  }
+        public Attribute Attribute { get; private set; }
 
         public string Name { get; private set; }
     }

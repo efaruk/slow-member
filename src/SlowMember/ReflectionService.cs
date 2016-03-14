@@ -7,42 +7,38 @@ using Microsoft.Win32.SafeHandles;
 
 namespace SlowMember
 {
-    public class ReflectionService: IReflectionService, IDisposable
+    public class ReflectionService : IReflectionService, IDisposable
     {
+        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+
+        private bool _disposed;
+
         public ReflectionService()
         {
             _cache = new Hashtable();
             _cacheLock = new object();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public bool CacheDisabled { get; set; }
-
-        #region Cache
-        private Hashtable _cache;
-        private readonly object _cacheLock;
-
-        private ObjectDescription GetFromCache(Type type)
-        {
-            var cacheItem = (ObjectDescription)_cache[type.FullName];
-            return cacheItem;
-        }
-
-        private void SetCacheItem(ObjectDescription cacheItem)
-        {
-            if (CacheDisabled) return;
-            lock (_cacheLock)
-            {
-                _cache[cacheItem.Type.FullName] = cacheItem;
-            }
-        }
-        #endregion
 
         public MemberInfo[] GetFieldsAndProperties(Type type, bool includeNonPublicMembers = false)
         {
             if (type == null) return null;
             var members = !includeNonPublicMembers
-                ? type.GetFields(Constants.PublicBindingFlags).Cast<MemberInfo>().Concat(type.GetProperties(Constants.PublicBindingFlags)).ToArray()
-                : type.GetFields(Constants.NonPublicBindingFlags).Cast<MemberInfo>().Concat(type.GetProperties(Constants.NonPublicBindingFlags)).ToArray();
+                ? type.GetFields(Constants.PublicBindingFlags)
+                    .Cast<MemberInfo>()
+                    .Concat(type.GetProperties(Constants.PublicBindingFlags))
+                    .ToArray()
+                : type.GetFields(Constants.NonPublicBindingFlags)
+                    .Cast<MemberInfo>()
+                    .Concat(type.GetProperties(Constants.NonPublicBindingFlags))
+                    .ToArray();
             return members;
         }
 
@@ -73,12 +69,6 @@ namespace SlowMember
             return methods;
         }
 
-        private ObjectDescription GetObjectDescriptionInternal(Type type, bool includeNonPublicMembers = false)
-        {
-            var objectDescription = new ObjectDescription(this, type, includeNonPublicMembers);
-            return objectDescription;
-        }
-
         public ObjectDescription GetObjectDescription(Type type, bool includeNonPublicMembers = false)
         {
             var objectDescription = GetFromCache(type);
@@ -88,25 +78,22 @@ namespace SlowMember
             return objectDescription;
         }
 
-        public ObjectDescription GetObjectDescription<T>(T instance, bool includeNonPublicMembers = false) 
-            where T: class
+        public ObjectDescription GetObjectDescription<T>(T instance, bool includeNonPublicMembers = false)
+            where T : class
         {
             var type = instance.GetType();
             var objectDescription = GetObjectDescription(type, includeNonPublicMembers);
             return objectDescription;
         }
 
-        public void Dispose()
+        private ObjectDescription GetObjectDescriptionInternal(Type type, bool includeNonPublicMembers = false)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            var objectDescription = new ObjectDescription(this, type, includeNonPublicMembers);
+            return objectDescription;
         }
 
-        private bool _disposed;
-        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
-        public void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
-            
             if (_disposed)
                 return;
             if (disposing)
@@ -116,5 +103,27 @@ namespace SlowMember
             }
             _disposed = true;
         }
+
+        #region Cache
+
+        private Hashtable _cache;
+        private readonly object _cacheLock;
+
+        private ObjectDescription GetFromCache(Type type)
+        {
+            var cacheItem = (ObjectDescription) _cache[type.FullName];
+            return cacheItem;
+        }
+
+        private void SetCacheItem(ObjectDescription cacheItem)
+        {
+            if (CacheDisabled) return;
+            lock (_cacheLock)
+            {
+                _cache[cacheItem.Type.FullName] = cacheItem;
+            }
+        }
+
+        #endregion
     }
 }

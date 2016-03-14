@@ -60,6 +60,20 @@ namespace SlowMember.Tests
         }
 
         [Test]
+        public void Member_type_should_be_same_with_member_property_or_field_type()
+        {
+            _reflectionService.CacheDisabled = true;
+            var description = _reflectionService.GetObjectDescription(_complexClass);
+            var memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Text");
+            Assert.NotNull(memberDescription);
+            Assert.AreEqual(typeof (string), memberDescription.MemberType);
+            memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Modified");
+            Assert.NotNull(memberDescription);
+            Assert.AreEqual(typeof (DateTime), memberDescription.MemberType);
+            _reflectionService.CacheDisabled = false;
+        }
+
+        [Test]
         public void Reflection_cache_performans_mesurement()
         {
             var reflectionService = new ReflectionService();
@@ -71,41 +85,17 @@ namespace SlowMember.Tests
             // Get ready...
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Parallel.For(0, maxParallelLoop, i =>
-            {
-                reflectionService.GetObjectDescription(_complexClass);
-            });
+            Parallel.For(0, maxParallelLoop, i => { reflectionService.GetObjectDescription(_complexClass); });
             stopwatch.Stop();
             var elapsedNotCache = stopwatch.ElapsedMilliseconds;
             reflectionService.CacheDisabled = false;
             stopwatch.Reset();
             stopwatch.Start();
-            Parallel.For(0, maxParallelLoop, i =>
-            {
-                reflectionService.GetObjectDescription(_complexClass);
-            });
+            Parallel.For(0, maxParallelLoop, i => { reflectionService.GetObjectDescription(_complexClass); });
             stopwatch.Stop();
             var elapsedCache = stopwatch.ElapsedMilliseconds;
             TestContext.WriteLine(string.Format("Cached: {0}, Not Cached: {1}", elapsedCache, elapsedNotCache));
             Assert.Less(elapsedCache, elapsedNotCache);
-        }
-
-        [Test]
-        public void Test_Object_description_member_count()
-        {
-            _reflectionService.CacheDisabled = true;
-            var description = _reflectionService.GetObjectDescription(_complexClass);
-            Assert.AreEqual(5, description.MemberDescriptions.Count);
-            _reflectionService.CacheDisabled = false;
-        }
-
-        [Test]
-        public void Test_Object_description_attribute_count()
-        {
-            _reflectionService.CacheDisabled = true;
-            var description = _reflectionService.GetObjectDescription(_complexClass);
-            Assert.AreEqual(2, description.AttributeDescriptions.Count);
-            _reflectionService.CacheDisabled = false;
         }
 
         [Test]
@@ -120,19 +110,22 @@ namespace SlowMember.Tests
         }
 
         [Test]
-        public void Member_type_should_be_same_with_member_property_or_field_type()
+        public void Test_Object_description_attribute_count()
         {
             _reflectionService.CacheDisabled = true;
             var description = _reflectionService.GetObjectDescription(_complexClass);
-            var memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Text");
-            Assert.NotNull(memberDescription);
-            Assert.AreEqual(typeof(string), memberDescription.MemberType);
-            memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Modified");
-            Assert.NotNull(memberDescription);
-            Assert.AreEqual(typeof(DateTime), memberDescription.MemberType);
+            Assert.AreEqual(2, description.AttributeDescriptions.Count);
             _reflectionService.CacheDisabled = false;
         }
 
+        [Test]
+        public void Test_Object_description_member_count()
+        {
+            _reflectionService.CacheDisabled = true;
+            var description = _reflectionService.GetObjectDescription(_complexClass);
+            Assert.AreEqual(5, description.MemberDescriptions.Count);
+            _reflectionService.CacheDisabled = false;
+        }
     }
 
     [TranslationContract]
@@ -185,15 +178,6 @@ namespace SlowMember.Tests
     public class TranslationContractAttribute : Attribute
     {
         /// <summary>
-        ///     Default constructor for TranslationContractAttribute. If you are using this Name should be ClassName of the Contract class and Keyfield should be marked with [Key] annotation.
-        ///     Otherwise you should set Name as TableName/Entity and KeyFieldName as PrimaryKey FieldName
-        /// </summary>
-        public TranslationContractAttribute()
-        {
-
-        }
-
-        /// <summary>
         ///     Name of the Entity/Table/Container
         /// </summary>
         public string Name { get; set; }
@@ -219,14 +203,6 @@ namespace SlowMember.Tests
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class TranslationMemberAttribute : Attribute
     {
-        /// <summary>
-        ///     Default constructor
-        /// </summary>
-        public TranslationMemberAttribute()
-        {
-
-        }
-
         /// <summary>
         ///     Name of the member (Field/Property)
         /// </summary>

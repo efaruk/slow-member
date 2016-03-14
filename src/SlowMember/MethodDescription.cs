@@ -13,7 +13,8 @@ namespace SlowMember
             ParameterDescriptions = new List<ParameterDescription>(10);
         }
 
-        public MethodDescription(IReflectionService reflectionService, MethodInfo methodInfo, ObjectDescription parent) : this()
+        public MethodDescription(IReflectionService reflectionService, MethodInfo methodInfo, ObjectDescription parent)
+            : this()
         {
             Parent = parent;
             MethodInfo = methodInfo;
@@ -21,7 +22,10 @@ namespace SlowMember
             ReturnParameter = new ParameterDescription(reflectionService, methodInfo.ReturnParameter, this);
             ReturnType = methodInfo.ReturnType;
             var parameterInfos = methodInfo.GetParameters();
-            foreach (var parameterDescription in parameterInfos.Select(parameterInfo => new ParameterDescription(reflectionService, parameterInfo, this)))
+            foreach (
+                var parameterDescription in
+                    parameterInfos.Select(
+                        parameterInfo => new ParameterDescription(reflectionService, parameterInfo, this)))
             {
                 ParameterDescriptions.Add(parameterDescription);
             }
@@ -36,17 +40,17 @@ namespace SlowMember
 
         public string Name { get; private set; }
 
-        public MethodInfo MethodInfo { get; private set; }
+        public MethodInfo MethodInfo { get; }
 
-        public List<ParameterDescription> ParameterDescriptions { get; private set; }
+        public List<ParameterDescription> ParameterDescriptions { get; }
 
-        public List<AttributeDescription> AttributeDescriptions { get; private set; }
+        public List<AttributeDescription> AttributeDescriptions { get; }
 
         private void FillAttributes(MethodInfo methodInfo)
         {
             var attributes = methodInfo.GetCustomAttributes(true).ToList();
             if (!attributes.Any()) return;
-            foreach (var description in attributes.Select(attribute => new AttributeDescription((Attribute)attribute)))
+            foreach (var description in attributes.Select(attribute => new AttributeDescription((Attribute) attribute)))
             {
                 AttributeDescriptions.Add(description);
             }
