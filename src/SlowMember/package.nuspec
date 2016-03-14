@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://www.gnu.org/copyleft/gpl.html</licenseUrl>
+    <projectUrl>https://github.com/efaruk/slow-member</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/efaruk/slow-member/master/doc/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Reflection Helper with Caching and Attribute support (Inspired from Marc Gravell's: https://github.com/mgravell/fast-member) </description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright ©  2016</copyright>
+    <tags>reflection attribute field property member helper fast-member cache</tags>
+  </metadata>
+</package>
