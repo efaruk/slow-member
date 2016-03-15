@@ -14,6 +14,6 @@
     <description>Reflection Helper with Caching and Attribute support (Inspired from Marc Gravell's: https://github.com/mgravell/fast-member) </description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright ©  2016</copyright>
-    <tags>reflection attribute field property member helper fast-member cache</tags>
+    <tags>reflection cache attribute private field property member method parameter helper fast-member fastmember</tags>
   </metadata>
 </package>

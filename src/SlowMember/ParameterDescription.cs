@@ -26,11 +26,11 @@ namespace SlowMember
 
         public MethodDescription Parent { get; private set; }
 
-        public List<AttributeDescription> AttributeDescriptions { get; }
+        public List<AttributeDescription> AttributeDescriptions { get; private set; }
 
         public ParameterInfo ParameterInfo { get; private set; }
 
-        public Type ParmeterType { get; set; }
+        public Type ParmeterType { get; private set; }
 
         private void FillAttributes(ParameterInfo parameterInfo)
         {

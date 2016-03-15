@@ -34,17 +34,17 @@ namespace SlowMember
 
         public ObjectDescription Parent { get; private set; }
 
-        public Type ReturnType { get; set; }
+        public Type ReturnType { get; private set; }
 
         public ParameterDescription ReturnParameter { get; private set; }
 
         public string Name { get; private set; }
 
-        public MethodInfo MethodInfo { get; }
+        public MethodInfo MethodInfo { get; private set; }
 
-        public List<ParameterDescription> ParameterDescriptions { get; }
+        public List<ParameterDescription> ParameterDescriptions { get; private set; }
 
-        public List<AttributeDescription> AttributeDescriptions { get; }
+        public List<AttributeDescription> AttributeDescriptions { get; private set; }
 
         private void FillAttributes(MethodInfo methodInfo)
         {

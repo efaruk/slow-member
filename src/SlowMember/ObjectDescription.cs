@@ -51,14 +51,14 @@ namespace SlowMember
             }
         }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public Type Type { get; set; }
+        public Type Type { get; private set; }
 
-        public List<MemberDescription> MemberDescriptions { get; set; }
+        public List<MemberDescription> MemberDescriptions { get; private set; }
 
-        public List<AttributeDescription> AttributeDescriptions { get; set; }
+        public List<AttributeDescription> AttributeDescriptions { get; private set; }
 
-        public List<MethodDescription> MethodDescriptions { get; set; }
+        public List<MethodDescription> MethodDescriptions { get; private set; }
     }
 }

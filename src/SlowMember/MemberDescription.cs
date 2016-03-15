@@ -40,11 +40,11 @@ namespace SlowMember
 
         public ObjectDescription Parent { get; private set; }
 
-        public FieldInfo FieldInfo { get; }
+        public FieldInfo FieldInfo { get; private set; }
 
-        public PropertyInfo PropertyInfo { get; }
+        public PropertyInfo PropertyInfo { get; private set; }
 
-        public Type MemberType { get; }
+        public Type MemberType { get; private set; }
 
 
         public bool IsGeneric { get; private set; }
@@ -52,7 +52,7 @@ namespace SlowMember
 
         public bool IsEnumerable { get; private set; }
 
-        public List<AttributeDescription> AttributeDescriptions { get; }
+        public List<AttributeDescription> AttributeDescriptions { get; private set; }
 
         public string Name { get; private set; }
 
