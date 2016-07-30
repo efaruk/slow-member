@@ -22,10 +22,10 @@ namespace SlowMember
             var attributes = type.GetCustomAttributes(true).ToList();
             if (attributes.Any())
             {
-                foreach (
-                    var description in attributes.Select(attribute => new AttributeDescription((Attribute) attribute)))
+                foreach (var item in attributes)
                 {
-                    AttributeDescriptions.Add(description);
+                    var attributeDescription = new AttributeDescription((Attribute)item);
+                    AttributeDescriptions.Add(attributeDescription);
                 }
             }
             var fieldInfos = reflectionService.GetFields(type, includeNonPublicMembers);

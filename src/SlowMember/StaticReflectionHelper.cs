@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace SlowMember
 {
-    internal static class StaticReflectionHelper
+    public static class StaticReflectionHelper
     {
         private static readonly ReflectionService ReflectionService;
 
