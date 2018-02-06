@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+
+namespace SlowMember
+{
+    public class Cache : IDisposable
+    {
+
+        private List<CacheItem> items;
+        private readonly object lockObject = new object();
+
+        public Cache()
+        {
+            items = new List<CacheItem>(1000);
+        }
+
+        public object this[string name]
+        {
+            get
+            {
+                var result = GetItem(name);
+                return result;
+            }
+            set
+            {
+                var cacheItem = new CacheItem(name, value);
+                SetItem(cacheItem);
+            }
+        }
+
+        private object GetItem(string key)
+        {
+            var item = items.Find(i => i.Key == key);
+            if (item != null)
+                return item.Item;
+            return null;
+        }
+
+
+        private void SetItem(CacheItem cacheItem)
+        {
+            var existing = items.Find(i => i.Key == cacheItem.Key);
+            lock (lockObject)
+            {
+                if (existing != null)
+                {
+                    items.Remove(existing);
+                }
+                items.Add(cacheItem);
+            }
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                    items = null;
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~Cache() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        void IDisposable.Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+
+    }
+
+    public class CacheItem
+    {
+
+        public CacheItem()
+        {
+        }
+
+        public CacheItem(string key, object item)
+        {
+            Key = key;
+            Item = item;
+        }
+
+        public string Key { get; set; }
+
+        public object Item { get; set; }
+    }
+}

@@ -1,22 +1,23 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SlowMember.Tests
 {
-    [TestFixture]
+    [TestClass]
     public class ReflectionServiceTests
     {
+
         private static ComplexClass _complexClass;
         private static IReflectionService _reflectionService;
 
-        [OneTimeSetUp]
-        public void FixtureSetup()
+        [ClassInitialize]
+        public static void FixtureSetup(TestContext testContext)
         {
             _reflectionService = new ReflectionService();
             _complexClass = new ComplexClass
@@ -59,21 +60,21 @@ namespace SlowMember.Tests
             };
         }
 
-        [Test]
+        [TestMethod]
         public void Member_type_should_be_same_with_member_property_or_field_type()
         {
             _reflectionService.CacheDisabled = true;
             var description = _reflectionService.GetObjectDescription(_complexClass);
             var memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Text");
-            Assert.NotNull(memberDescription);
+            Assert.IsNotNull(memberDescription);
             Assert.AreEqual(typeof (string), memberDescription.MemberType);
             memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Modified");
-            Assert.NotNull(memberDescription);
+            Assert.IsNotNull(memberDescription);
             Assert.AreEqual(typeof (DateTime), memberDescription.MemberType);
             _reflectionService.CacheDisabled = false;
         }
 
-        [Test]
+        [TestMethod]
         public void Reflection_cache_performans_mesurement()
         {
             var reflectionService = new ReflectionService();
@@ -94,22 +95,23 @@ namespace SlowMember.Tests
             Parallel.For(0, maxParallelLoop, i => { reflectionService.GetObjectDescription(_complexClass); });
             stopwatch.Stop();
             var elapsedCache = stopwatch.ElapsedMilliseconds;
-            TestContext.WriteLine(string.Format("Cached: {0}, Not Cached: {1}", elapsedCache, elapsedNotCache));
-            Assert.Less(elapsedCache, elapsedNotCache);
+            Debug.WriteLine(string.Format("Cached: {0}, Not Cached: {1}", elapsedCache, elapsedNotCache));
+            //Assert.Less(elapsedCache, elapsedNotCache);
+            Assert.IsTrue((elapsedCache < elapsedNotCache));
         }
 
-        [Test]
+        [TestMethod]
         public void Test_Member_description_attribute_count()
         {
             _reflectionService.CacheDisabled = true;
             var description = _reflectionService.GetObjectDescription(_complexClass);
             var memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Text");
-            Assert.NotNull(memberDescription);
+            Assert.IsNotNull(memberDescription);
             Assert.AreEqual(2, memberDescription.AttributeDescriptions.Count);
             _reflectionService.CacheDisabled = false;
         }
 
-        [Test]
+        [TestMethod]
         public void Test_Object_description_attribute_count()
         {
             _reflectionService.CacheDisabled = true;
@@ -118,7 +120,7 @@ namespace SlowMember.Tests
             _reflectionService.CacheDisabled = false;
         }
 
-        [Test]
+        [TestMethod]
         public void Test_Object_description_member_count()
         {
             _reflectionService.CacheDisabled = true;
