@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SlowMember
 {
-    public class MemberDescription
+    public class MemberDescription: BaseObjectDescription
     {
         private readonly IReflectionService _reflectionService;
 
@@ -20,7 +20,7 @@ namespace SlowMember
             _reflectionService = reflectionService;
             Parent = parent;
             PropertyInfo = propertyInfo;
-            MemberType = propertyInfo.PropertyType;
+            Type = propertyInfo.PropertyType;
             Name = propertyInfo.Name;
             FillAttributes(propertyInfo);
             FillIsGenericEnumerable();
@@ -32,7 +32,7 @@ namespace SlowMember
             _reflectionService = reflectionService;
             Parent = parent;
             FieldInfo = fieldInfo;
-            MemberType = fieldInfo.FieldType;
+            Type = fieldInfo.FieldType;
             Name = fieldInfo.Name;
             FillAttributes(fieldInfo);
             FillIsGenericEnumerable();
@@ -44,17 +44,7 @@ namespace SlowMember
 
         public PropertyInfo PropertyInfo { get; private set; }
 
-        public Type MemberType { get; private set; }
-
-
-        public bool IsGeneric { get; private set; }
-
-
-        public bool IsEnumerable { get; private set; }
-
         public List<AttributeDescription> AttributeDescriptions { get; private set; }
-
-        public string Name { get; private set; }
 
         private void FillAttributes(MemberInfo memberInfo)
         {
@@ -64,14 +54,6 @@ namespace SlowMember
             {
                 AttributeDescriptions.Add(description);
             }
-        }
-
-        private void FillIsGenericEnumerable()
-        {
-            var typeInfo = (TypeInfo) MemberType;
-            var any = typeInfo.GetInterface("IEnumerable");
-            IsEnumerable = any != null;
-            IsGeneric = MemberType.IsGenericType;
         }
 
         public object GetValue(object instance)

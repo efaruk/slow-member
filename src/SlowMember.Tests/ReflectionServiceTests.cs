@@ -67,10 +67,10 @@ namespace SlowMember.Tests
             var description = _reflectionService.GetObjectDescription(_complexClass);
             var memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Text");
             Assert.IsNotNull(memberDescription);
-            Assert.AreEqual(typeof (string), memberDescription.MemberType);
+            Assert.AreEqual(typeof (string), memberDescription.Type);
             memberDescription = description.MemberDescriptions.FirstOrDefault(f => f.Name == "Modified");
             Assert.IsNotNull(memberDescription);
-            Assert.AreEqual(typeof (DateTime), memberDescription.MemberType);
+            Assert.AreEqual(typeof (DateTime), memberDescription.Type);
             _reflectionService.CacheDisabled = false;
         }
 

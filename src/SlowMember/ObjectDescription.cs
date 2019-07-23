@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace SlowMember
 {
-    public class ObjectDescription
+    public class ObjectDescription: BaseObjectDescription
     {
         private ObjectDescription()
         {
@@ -53,27 +53,11 @@ namespace SlowMember
             }
         }
 
-        public string Name { get; private set; }
-
-        public Type Type { get; private set; }
-
-        public bool IsGeneric { get; private set; }
-
-        public bool IsEnumerable { get; private set; }
-
         public List<MemberDescription> MemberDescriptions { get; private set; }
 
         public List<AttributeDescription> AttributeDescriptions { get; private set; }
 
         public List<MethodDescription> MethodDescriptions { get; private set; }
-
-        private void FillIsGenericEnumerable()
-        {
-            var typeInfo = (TypeInfo) Type;
-            var any = typeInfo.GetInterface("IEnumerable");
-            IsEnumerable = any != null;
-            IsGeneric = Type.IsGenericType;
-        }
         
     }
 }
