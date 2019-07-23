@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace SlowMember
 {
@@ -19,6 +20,7 @@ namespace SlowMember
             if (type == null) throw new ArgumentNullException("type");
             Name = string.IsNullOrWhiteSpace(name) ? type.Name : name;
             Type = type;
+            FillIsGenericEnumerable();
             var attributes = type.GetCustomAttributes(true).ToList();
             if (attributes.Any())
             {
@@ -55,10 +57,23 @@ namespace SlowMember
 
         public Type Type { get; private set; }
 
+        public bool IsGeneric { get; private set; }
+
+        public bool IsEnumerable { get; private set; }
+
         public List<MemberDescription> MemberDescriptions { get; private set; }
 
         public List<AttributeDescription> AttributeDescriptions { get; private set; }
 
         public List<MethodDescription> MethodDescriptions { get; private set; }
+
+        private void FillIsGenericEnumerable()
+        {
+            var typeInfo = (TypeInfo) Type;
+            var any = typeInfo.GetInterface("IEnumerable");
+            IsEnumerable = any != null;
+            IsGeneric = Type.IsGenericType;
+        }
+        
     }
 }
