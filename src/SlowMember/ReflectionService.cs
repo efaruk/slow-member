@@ -13,12 +13,6 @@ namespace SlowMember
 
         private bool _disposed;
 
-        public ReflectionService()
-        {
-            _cache = new Hashtable();
-            _cacheLock = new object();
-        }
-
         public void Dispose()
         {
             Dispose(true);
@@ -99,28 +93,30 @@ namespace SlowMember
             if (disposing)
             {
                 _handle.Dispose();
-                _cache = null;
+                Cache.Clear();
             }
             _disposed = true;
         }
 
         #region Cache
 
-        private Hashtable _cache;
-        private readonly object _cacheLock;
+        private static readonly Hashtable Cache = new Hashtable();
+        private static readonly object CacheLock = new object();
 
         private ObjectDescription GetFromCache(Type type)
         {
-            var cacheItem = (ObjectDescription) _cache[type.FullName];
+            if (type == null) return null;
+            var cacheItem = (ObjectDescription) Cache[type.FullName];
             return cacheItem;
         }
 
         private void SetCacheItem(ObjectDescription cacheItem)
         {
+            if (cacheItem == null) return;
             if (CacheDisabled) return;
-            lock (_cacheLock)
+            lock (CacheLock)
             {
-                _cache[cacheItem.Type.FullName] = cacheItem;
+                Cache[cacheItem.Type.FullName] = cacheItem;
             }
         }
 
