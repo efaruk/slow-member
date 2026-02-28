@@ -106,6 +106,7 @@ namespace SlowMember
         private ObjectDescription GetFromCache(Type type)
         {
             if (type == null) return null;
+            if (CacheDisabled) return null;
             var cacheItem = (ObjectDescription) Cache[type.FullName];
             return cacheItem;
         }

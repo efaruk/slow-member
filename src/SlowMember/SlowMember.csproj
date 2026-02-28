@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks Condition=" '$(APPVEYOR)' == '' ">netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(APPVEYOR)' != '' ">net452;net461;netstandard2.0</TargetFrameworks>
-    <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">1.1.3</Version>
-    <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
-    <Version>1.1.6</Version>
+    <TargetFrameworks>net452;net462;net472;net481;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <Version>1.2.0</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/efaruk/slow-member/master/doc/logo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/efaruk/slow-member</RepositoryUrl>
     <PackageProjectUrl>https://github.com/efaruk/slow-member</PackageProjectUrl>
@@ -12,14 +9,30 @@
     <License>license.txt</License>
     <Copyright>efaruk</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.1.6.0</AssemblyVersion>
-    <FileVersion>1.1.6.0</FileVersion>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Authors>efaruk</Authors>
     <Product>SlowMember</Product>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>reflection cache attribute private field property member method parameter helper fast-member fastmember</PackageTags>
+    <Title>SlowMember</Title>
+    <Description>Reflection Helper with Caching and Attribute support</Description>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <!-- <Version>1.1.0</Version> -->
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\doc\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
